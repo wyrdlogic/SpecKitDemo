@@ -60,14 +60,18 @@ class GameOverScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-              
+
               // Stats
               _buildStatRow(context, 'Final Level', finalLevel.toString()),
               const SizedBox(height: 15),
-              _buildStatRow(context, 'Enemies Defeated', enemiesDefeated.toString()),
-              
+              _buildStatRow(
+                context,
+                'Enemies Defeated',
+                enemiesDefeated.toString(),
+              ),
+
               const SizedBox(height: 60),
-              
+
               // Buttons
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -102,9 +106,9 @@ class GameOverScreen extends StatelessWidget {
       children: [
         Text(
           '$label: ',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: Colors.white70,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(color: Colors.white70),
         ),
         Text(
           value,
@@ -134,9 +138,7 @@ class GameOverScreen extends StatelessWidget {
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }

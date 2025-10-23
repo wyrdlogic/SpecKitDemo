@@ -79,12 +79,12 @@ final class WallComponent extends BaseGameComponent {
   void _renderActiveWall(Canvas canvas) {
     // Draw wall body with level-based color
     final baseColor = viewModel.color;
-    
+
     // Flash red when damaged
     final wallColor = _damageFlashTimer > 0
         ? Color.lerp(baseColor, Colors.red, 0.7)!
         : baseColor;
-    
+
     final wallPaint = Paint()
       ..color = wallColor
       ..style = PaintingStyle.fill;
@@ -94,8 +94,10 @@ final class WallComponent extends BaseGameComponent {
 
     // Draw border (thicker and red during flash)
     final borderColor = _damageFlashTimer > 0 ? Colors.red : Colors.black;
-    final borderThickness = _damageFlashTimer > 0 ? borderWidth + 2 : borderWidth;
-    
+    final borderThickness = _damageFlashTimer > 0
+        ? borderWidth + 2
+        : borderWidth;
+
     final borderPaint = Paint()
       ..color = borderColor
       ..style = PaintingStyle.stroke
@@ -107,7 +109,7 @@ final class WallComponent extends BaseGameComponent {
     if (viewModel.healthPercentage < 0.5) {
       _renderDamageCracks(canvas);
     }
-    
+
     // Draw additional damage effects if health is critical
     if (viewModel.healthPercentage < 0.25) {
       _renderCriticalDamageEffects(canvas);
@@ -229,15 +231,27 @@ final class WallComponent extends BaseGameComponent {
       ..strokeWidth = 3.0;
 
     // Additional severe damage cracks
-    canvas.drawLine(const Offset(40, 15), const Offset(50, 80), severeCrackPaint);
-    canvas.drawLine(const Offset(25, 50), const Offset(60, 45), severeCrackPaint);
-    canvas.drawLine(const Offset(50, 70), const Offset(40, 110), severeCrackPaint);
-    
+    canvas.drawLine(
+      const Offset(40, 15),
+      const Offset(50, 80),
+      severeCrackPaint,
+    );
+    canvas.drawLine(
+      const Offset(25, 50),
+      const Offset(60, 45),
+      severeCrackPaint,
+    );
+    canvas.drawLine(
+      const Offset(50, 70),
+      const Offset(40, 110),
+      severeCrackPaint,
+    );
+
     // Add damage vignette effect
     final vignettePaint = Paint()
       ..color = Colors.red.withAlpha((0.15 * 255).round())
       ..style = PaintingStyle.fill;
-    
+
     canvas.drawRect(size.toRect(), vignettePaint);
   }
 
