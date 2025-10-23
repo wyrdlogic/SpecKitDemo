@@ -64,7 +64,7 @@
 - [X] T016 [P] [US1] Unit test for Resource model in test/unit/models/resource_test.dart
 - [X] T017 [P] [US1] Unit test for ResourceViewModel in test/unit/viewmodels/resource_viewmodel_test.dart
 - [X] T018 [P] [US1] Unit test for WallViewModel in test/unit/viewmodels/wall_viewmodel_test.dart
-- [ ] T019 [P] [US1] Widget test for resource buttons in test/widget/components/resource_hud_test.dart
+- [X] T019 [P] [US1] Widget test for resource buttons in test/widget/components/resource_hud_test.dart
 - [ ] T020 [P] [US1] Widget test for wall component in test/widget/components/wall_component_test.dart
 - [ ] T021 [US1] Integration test for resource generation and wall upgrade flow in test/integration/us1_resource_upgrade_test.dart
 
@@ -83,9 +83,9 @@
 - [ ] T032 [US1] Add validation and error handling for resource operations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - player can generate resources and upgrade wall independently
-- [ ] T030 [US1] Create basic GameView screen with resource UI in lib/views/game_view.dart
-- [ ] T031 [US1] Wire up dependency injection for US1 services and ViewModels
-- [ ] T032 [US1] Add validation and error handling for resource operations
+- [X] T030 [US1] Create basic GameView screen with resource UI in lib/views/game_view.dart
+- [X] T031 [US1] Wire up dependency injection for US1 services and ViewModels
+- [X] T032 [US1] Add validation and error handling for resource operations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - player can generate resources and upgrade wall independently
 
