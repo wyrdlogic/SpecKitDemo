@@ -72,6 +72,9 @@ class _GameViewState extends State<GameView> {
       // Wave is complete, advance level after delay
       Future.delayed(const Duration(seconds: 3), () {
         if (mounted && !_wallViewModel.isDestroyed) {
+          // Clear all existing enemies before starting next wave
+          _enemyViewModel.clearAll();
+          
           _waveViewModel.advanceLevel();
           _waveViewModel.startWave(level: _waveViewModel.currentLevel);
         }
