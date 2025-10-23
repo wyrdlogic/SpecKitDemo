@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'core/service_locator.dart'; // TODO: Uncomment when services are implemented
+import 'package:provider/provider.dart';
+import 'viewmodels/resource_viewmodel.dart';
+import 'viewmodels/wall_viewmodel.dart';
+import 'viewmodels/enemy_viewmodel.dart';
+import 'views/game_view.dart';
 
 Future<void> main() async {
   // Ensure Flutter is initialized
@@ -12,20 +16,7 @@ Future<void> main() async {
     DeviceOrientation.landscapeRight,
   ]);
 
-  // Initialize dependency injection
-  _setupDependencyInjection();
-
   runApp(const TowerDefenseApp());
-}
-
-/// Setup dependency injection container with all services
-void _setupDependencyInjection() {
-  // TODO: Register services when they are implemented
-  // final services = ServiceLocator.instance;
-  // services.register<IGameEngine>(() => GameEngineService());
-  // services.register<IResourceManager>(() => ResourceManagerService());
-  // services.register<IEnemySpawner>(() => EnemySpawnerService());
-  // services.register<IDifficultyScaler>(() => DifficultyScalerService());
 }
 
 class TowerDefenseApp extends StatelessWidget {
@@ -44,7 +35,18 @@ class TowerDefenseApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto',
       ),
-      home: const PlaceholderGameScreen(),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ResourceViewModel()),
+          ChangeNotifierProvider(
+            create: (_) => WallViewModel(
+              wallPosition: const Offset(400, 300), // Will be centered in game
+            ),
+          ),
+          ChangeNotifierProvider(create: (_) => EnemyViewModel()),
+        ],
+        child: const GameView(),
+      ),
     );
   }
 }
