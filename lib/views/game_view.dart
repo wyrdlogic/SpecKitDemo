@@ -97,16 +97,32 @@ class _GameViewState extends State<GameView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
-      body: Stack(
+      body: Column(
         children: [
-          // Flame game canvas (wall, enemies, effects)
-          GameWidget(
-            game: _game,
-            overlayBuilderMap: {'hud': (context, game) => const ResourceHUD()},
-            initialActiveOverlays: const ['hud'],
+          // Flame game canvas (wall, enemies, effects) - takes most of the space
+          Expanded(
+            child: Stack(
+              children: [
+                GameWidget(game: _game),
+                // Wave timer in top right of game area
+                Positioned(top: 16, right: 16, child: const WaveTimer()),
+              ],
+            ),
           ),
-          // Wave timer in top right
-          Positioned(top: 16, right: 16, child: const WaveTimer()),
+          // ResourceHUD at the bottom - fixed height, scrollable if needed
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              color: Colors.black.withAlpha((0.9 * 255).round()),
+              border: Border(
+                top: BorderSide(
+                  color: Colors.white.withAlpha((0.3 * 255).round()),
+                  width: 2,
+                ),
+              ),
+            ),
+            child: SingleChildScrollView(child: const ResourceHUD()),
+          ),
         ],
       ),
     );

@@ -13,27 +13,31 @@ class ResourceHUD extends StatelessWidget {
     return Consumer2<ResourceViewModel, WallViewModel>(
       builder: (context, resourceVM, wallVM, child) {
         return Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.black.withAlpha((0.7 * 255).round()),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          padding: const EdgeInsets.all(12),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Resource display
-              _buildResourceDisplay(resourceVM),
-              const SizedBox(height: 16),
-              const Divider(color: Colors.white24),
-              const SizedBox(height: 16),
-              // Wall info
-              _buildWallInfo(wallVM),
-              const SizedBox(height: 16),
-              const Divider(color: Colors.white24),
-              const SizedBox(height: 16),
-              // Action buttons
-              _buildActionButtons(context, resourceVM, wallVM),
+              // Resources and Wall Info section
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildResourceDisplay(resourceVM),
+                    const SizedBox(height: 12),
+                    _buildWallInfo(wallVM),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 24),
+              const VerticalDivider(color: Colors.white24, width: 1),
+              const SizedBox(width: 24),
+              // Action buttons section
+              Expanded(
+                flex: 3,
+                child: _buildActionButtons(context, resourceVM, wallVM),
+              ),
             ],
           ),
         );
@@ -44,16 +48,17 @@ class ResourceHUD extends StatelessWidget {
   Widget _buildResourceDisplay(ResourceViewModel resourceVM) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         const Text(
           'Resources',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         ...ResourceType.values.map((type) {
           return _buildResourceRow(
             type,
@@ -116,62 +121,62 @@ class ResourceHUD extends StatelessWidget {
   Widget _buildWallInfo(WallViewModel wallVM) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         const Text(
-          'Wall Status',
+          'Wall',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Row(
           children: [
             const Text(
-              'Level:',
-              style: TextStyle(color: Colors.white70, fontSize: 14),
+              'Lv:',
+              style: TextStyle(color: Colors.white70, fontSize: 12),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 4),
             Text(
               wallVM.level.toString(),
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Row(
-          children: [
+            const SizedBox(width: 12),
             const Text(
               'HP:',
-              style: TextStyle(color: Colors.white70, fontSize: 14),
+              style: TextStyle(color: Colors.white70, fontSize: 12),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 4),
             Text(
               '${wallVM.currentHP}/${wallVM.maxHP}',
               style: TextStyle(
                 color: _getHealthColor(wallVM.healthPercentage),
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         // Health bar
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(
-            value: wallVM.healthPercentage,
-            backgroundColor: Colors.red.shade900,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              _getHealthColor(wallVM.healthPercentage),
+        SizedBox(
+          width: 200,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: wallVM.healthPercentage,
+              backgroundColor: Colors.red.shade900,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                _getHealthColor(wallVM.healthPercentage),
+              ),
+              minHeight: 6,
             ),
-            minHeight: 8,
           ),
         ),
       ],
@@ -195,47 +200,49 @@ class ResourceHUD extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        // Resource generation buttons
-        _buildResourceButton(
-          'Generate Blue',
-          Icons.add_circle,
-          Colors.blue,
-          () => resourceVM.startGeneration(ResourceType.blue),
-          enabled: true,
-        ),
-        const SizedBox(height: 8),
-        _buildResourceButton(
-          'Generate Green',
-          Icons.add_circle,
-          Colors.green,
-          () => resourceVM.startGeneration(ResourceType.green),
-          enabled: true,
-        ),
-        const SizedBox(height: 8),
-        _buildResourceButton(
-          'Generate Yellow',
-          Icons.add_circle,
-          Colors.yellow,
-          () => resourceVM.startGeneration(ResourceType.yellow),
-          enabled: true,
-        ),
-        const SizedBox(height: 12),
-        // Wall upgrade button
-        _buildActionButton(
-          'Upgrade Wall (50 Blue)',
-          Icons.arrow_upward,
-          () => _upgradeWall(resourceVM, wallVM),
-          enabled: resourceVM.canAfford(ResourceType.blue, 50),
-        ),
-        const SizedBox(height: 8),
-        // Wall heal button
-        _buildActionButton(
-          'Heal Wall (30 Green)',
-          Icons.favorite,
-          () => _healWall(resourceVM, wallVM),
-          enabled:
-              resourceVM.canAfford(ResourceType.green, 30) &&
-              wallVM.currentHP < wallVM.maxHP,
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            // Resource generation buttons
+            _buildResourceButton(
+              'Gen Blue',
+              Icons.add_circle,
+              Colors.blue,
+              () => resourceVM.startGeneration(ResourceType.blue),
+              enabled: true,
+            ),
+            _buildResourceButton(
+              'Gen Green',
+              Icons.add_circle,
+              Colors.green,
+              () => resourceVM.startGeneration(ResourceType.green),
+              enabled: true,
+            ),
+            _buildResourceButton(
+              'Gen Yellow',
+              Icons.add_circle,
+              Colors.yellow,
+              () => resourceVM.startGeneration(ResourceType.yellow),
+              enabled: true,
+            ),
+            // Wall upgrade button
+            _buildActionButton(
+              'Upgrade (50 Blue)',
+              Icons.arrow_upward,
+              () => _upgradeWall(resourceVM, wallVM),
+              enabled: resourceVM.canAfford(ResourceType.blue, 50),
+            ),
+            // Wall heal button
+            _buildActionButton(
+              'Heal (30 Green)',
+              Icons.favorite,
+              () => _healWall(resourceVM, wallVM),
+              enabled:
+                  resourceVM.canAfford(ResourceType.green, 30) &&
+                  wallVM.currentHP < wallVM.maxHP,
+            ),
+          ],
         ),
       ],
     );
