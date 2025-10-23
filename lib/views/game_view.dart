@@ -166,19 +166,14 @@ class TowerDefenseGame extends FlameGame {
       position: wallPosition,
     );
     await add(wallComponent);
-
-    // Start resource generation after widget tree is fully built
-    // This is called from TowerDefenseGame which is created after first frame
-    Future.microtask(() {
-      resourceViewModel.startGeneration(ResourceType.blue);
-      resourceViewModel.startGeneration(ResourceType.green);
-      resourceViewModel.startGeneration(ResourceType.yellow);
-    });
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+
+    // Update resource generation
+    resourceViewModel.updateGeneration();
 
     // Update wave timer
     if (waveViewModel.isWaveActive) {
