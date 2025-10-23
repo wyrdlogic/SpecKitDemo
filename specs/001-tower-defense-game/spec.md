@@ -7,54 +7,68 @@
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Basic Survival Gameplay (Priority: P1)
+### User Story 1 - Basic Resource Generation and Wall Defense (Priority: P1)
 
-A player starts their first game session, learns the basic mechanics through gameplay, and attempts to survive their first wave by managing resources and defending their wall.
+As a new player, I want to tap resource generation buttons and see immediate feedback so that I can understand the basic game mechanics and begin defending my wall against the first wave of enemies.
 
-**Why this priority**: This is the core game loop that defines the entire game experience. Without this working, there is no game.
+**Why this priority**: This delivers the fundamental interaction model and immediate game value. A player can learn core mechanics and experience the basic defense gameplay loop in isolation.
 
-**Independent Test**: Can be fully tested by starting a new game, generating resources, upgrading the wall, and surviving a complete 60-second wave. Delivers the complete core game experience.
+**Independent Test**: Can be fully tested by launching the game, tapping blue resource buttons to accumulate resources, upgrading the wall once, and observing visual feedback. Delivers immediate understanding of resource→upgrade→defense progression without requiring complex enemy interactions.
 
 **Acceptance Scenarios**:
 
-1. **Given** a new game starts, **When** the player taps resource buttons, **Then** resources are generated at the displayed rate per second
-2. **Given** the player has sufficient blue resources, **When** they upgrade the wall, **Then** the wall level increases, max HP increases, and wall color changes
-3. **Given** enemies are attacking the wall, **When** the wall takes damage, **Then** the HP bar decreases visually and current HP reduces
-4. **Given** the player has green resources, **When** they use healing, **Then** the wall's current HP increases up to its maximum
-5. **Given** a 60-second wave is active, **When** the timer reaches zero and the wall has HP remaining, **Then** the player progresses to the next level
-6. **Given** the wall's HP reaches zero, **When** an enemy attacks, **Then** the game ends
+1. **Given** a new game starts, **When** I tap the blue resource button, **Then** I see blue resources increment and generation rate display updates
+2. **Given** I have sufficient blue resources, **When** I tap the wall upgrade button, **Then** the wall level increases, max HP increases, and the wall changes color to show the upgrade
+3. **Given** my wall has been upgraded, **When** I view the game screen, **Then** I can clearly see the improved wall appearance and updated HP bar reflecting higher maximum health
 
 ---
 
-### User Story 2 - Resource Optimization Strategy (Priority: P2)
+### User Story 2 - Enemy Combat and Wall Health Management (Priority: P2)
 
-A player learns to strategically manage and optimize their resource generation by using yellow resources to improve efficiency and making tactical decisions about when to upgrade versus heal.
+As a player defending my wall, I want enemies to spawn and move toward my wall while I manage damage and healing so that I can experience the core tower defense challenge of survival through strategic resource allocation.
 
-**Why this priority**: Resource strategy is what creates depth and replayability in the game, differentiating it from simple clicking games.
+**Why this priority**: This adds the essential combat element and creates the time pressure that makes resource management meaningful. Without enemies, there's no challenge or reason to upgrade.
 
-**Independent Test**: Can be tested by playing multiple waves, using yellow resources to upgrade generation rates, and observing improved resource accumulation efficiency.
+**Independent Test**: Can be fully tested by starting a wave, watching enemies spawn and move toward the wall, allowing some damage to occur, then using green resources to heal the wall back to full health. Delivers the complete defend-and-recover gameplay cycle.
 
 **Acceptance Scenarios**:
 
-1. **Given** the player has yellow resources, **When** they upgrade resource generation, **Then** the generation rate increases for the selected resource type
-2. **Given** multiple upgrade options, **When** the player chooses between wall upgrade, healing, or efficiency upgrades, **Then** each choice provides distinct strategic value
-3. **Given** higher game levels, **When** resource costs scale exponentially, **Then** players must make meaningful trade-off decisions
+1. **Given** a wave starts, **When** enemies spawn from both sides, **Then** I see them moving toward my wall along defined paths at appropriate speeds
+2. **Given** enemies reach my wall, **When** they attack, **Then** I see my wall's HP decrease and the health bar update to reflect damage taken
+3. **Given** my wall has taken damage and I have green resources, **When** I tap the heal button, **Then** my wall's HP increases up to its maximum and I see the health bar restore
+4. **Given** my wall's HP reaches zero, **When** the next enemy attack occurs, **Then** the game ends with a clear game over indication
 
 ---
 
-### User Story 3 - Progressive Difficulty Challenge (Priority: P3)
+### User Story 3 - Complete Wave Survival and Level Progression (Priority: P3)
 
-A player experiences increasing challenge as they progress through levels, with enemies becoming stronger and requiring more advanced resource management and wall upgrades to survive.
+As a player who has learned the basic mechanics, I want to survive a complete 60-second wave and advance to the next level so that I can experience the full game loop and see my strategic decisions pay off with progression rewards.
 
-**Why this priority**: Progressive difficulty ensures long-term engagement and provides a sense of achievement, but the core game is playable without this complexity.
+**Why this priority**: This completes the core game loop by adding time pressure, victory conditions, and progression. It validates that the resource and combat systems work together to create engaging gameplay over time.
 
-**Independent Test**: Can be tested by surviving multiple waves and verifying that enemy speed, damage, and HP increase appropriately while resource costs scale.
+**Independent Test**: Can be fully tested by playing through a complete 60-second wave, managing resources while under enemy pressure, surviving until the timer ends, and advancing to level 2 with increased difficulty. Delivers the complete gameplay satisfaction cycle.
 
 **Acceptance Scenarios**:
 
-1. **Given** the player reaches level 2, **When** enemies spawn, **Then** they have increased speed, HP, and damage compared to level 1
-2. **Given** higher levels, **When** the player attempts the same strategy as level 1, **Then** they face meaningful increased difficulty
-3. **Given** scaled enemy strength, **When** the player adapts their resource strategy, **Then** they can still achieve success with improved tactics
+1. **Given** I start a new wave, **When** the 60-second timer begins counting down, **Then** I see enemies spawning continuously while I manage resources under time pressure
+2. **Given** I survive the full 60 seconds with wall HP remaining, **When** the timer reaches zero, **Then** the wave ends successfully and I advance to the next level
+3. **Given** I reach level 2, **When** the new wave starts, **Then** I encounter noticeably stronger enemies that require improved strategy to survive
+
+---
+
+### User Story 4 - Resource Efficiency Optimization (Priority: P4)
+
+As an experienced player facing higher costs and stronger enemies, I want to use yellow resources to upgrade my resource generation rates so that I can optimize my economy and make strategic trade-offs between immediate needs and long-term efficiency.
+
+**Why this priority**: This adds the strategic depth layer that differentiates the game from simple clickers. It's valuable for replayability but the core game is complete without it.
+
+**Independent Test**: Can be fully tested by accumulating yellow resources, purchasing generation rate upgrades, and observing improved resource accumulation speed. Delivers the strategic optimization layer without requiring complex game progression.
+
+**Acceptance Scenarios**:
+
+1. **Given** I have accumulated yellow resources, **When** I purchase a blue resource generation upgrade, **Then** I see my blue resource generation rate increase and accumulate resources faster
+2. **Given** I face expensive wall upgrades at higher levels, **When** I must choose between immediate wall healing or long-term generation improvements, **Then** I can make meaningful strategic decisions based on current threat levels
+3. **Given** I have optimized my resource generation, **When** facing the same wave difficulty as before, **Then** I can survive more easily due to improved resource flow
 
 ---
 
