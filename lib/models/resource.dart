@@ -7,31 +7,25 @@ class Resource {
     int amount = 0,
     double generationRate = 0.0,
     bool isGenerating = false,
-    DateTime? lastGenerationTime,
-  }) : _amount = amount,
+  }) : _amount = amount.toDouble(),
        _generationRate = generationRate,
-       _isGenerating = isGenerating,
-       _lastGenerationTime = lastGenerationTime ?? DateTime.now() {
+       _isGenerating = isGenerating {
     _validateState();
   }
 
   final ResourceType type;
-  int _amount;
+  double _amount; // Store as double internally to accumulate fractional resources
   double _generationRate;
   bool _isGenerating;
-  DateTime _lastGenerationTime;
 
-  /// Current quantity owned
-  int get amount => _amount;
+  /// Current quantity owned (floored to int for display/spending)
+  int get amount => _amount.floor();
 
   /// Resources per second generation rate
   double get generationRate => _generationRate;
 
   /// Active generation state
   bool get isGenerating => _isGenerating;
-
-  /// Last generation time for calculation timing
-  DateTime get lastGenerationTime => _lastGenerationTime;
 
   /// Whether there are enough resources to spend the given amount
   bool canAfford(int cost) {
@@ -59,30 +53,25 @@ class Resource {
     _validateState();
   }
 
-  /// Generate resources based on time elapsed since last generation
+  /// Generate resources based on frame updates (60 FPS assumed)
+  /// Call this every frame to increment resources at the generation rate
   void generateResources() {
     if (!_isGenerating || _generationRate <= 0) {
       return;
     }
 
-    final now = DateTime.now();
-    final timeElapsedSeconds =
-        now.difference(_lastGenerationTime).inMilliseconds / 1000.0;
-
-    if (timeElapsedSeconds > 0) {
-      final generatedAmount = (_generationRate * timeElapsedSeconds).floor();
-      if (generatedAmount > 0) {
-        _amount += generatedAmount;
-        _lastGenerationTime = now;
-        _validateState();
-      }
-    }
+    // Assuming 60 FPS: 1 second = 60 frames
+    // So each frame represents 1/60th of a second
+    const double deltaTime = 1.0 / 60.0;
+    
+    // Accumulate fractional resources - don't floor until getting amount
+    _amount += _generationRate * deltaTime;
+    _validateState();
   }
 
   /// Start resource generation
   void startGeneration() {
     _isGenerating = true;
-    _lastGenerationTime = DateTime.now();
   }
 
   /// Stop resource generation
@@ -115,7 +104,6 @@ class Resource {
     _amount = 0;
     _generationRate = 0.0;
     _isGenerating = false;
-    _lastGenerationTime = DateTime.now();
     _validateState();
   }
 
@@ -135,14 +123,12 @@ class Resource {
     int? amount,
     double? generationRate,
     bool? isGenerating,
-    DateTime? lastGenerationTime,
   }) {
     return Resource(
       type: type ?? this.type,
-      amount: amount ?? _amount,
+      amount: amount ?? _amount.floor(),
       generationRate: generationRate ?? _generationRate,
       isGenerating: isGenerating ?? _isGenerating,
-      lastGenerationTime: lastGenerationTime ?? _lastGenerationTime,
     );
   }
 
@@ -153,8 +139,7 @@ class Resource {
         other.type == type &&
         other._amount == _amount &&
         other._generationRate == _generationRate &&
-        other._isGenerating == _isGenerating &&
-        other._lastGenerationTime == _lastGenerationTime;
+        other._isGenerating == _isGenerating;
   }
 
   @override
@@ -164,7 +149,6 @@ class Resource {
       _amount,
       _generationRate,
       _isGenerating,
-      _lastGenerationTime,
     );
   }
 

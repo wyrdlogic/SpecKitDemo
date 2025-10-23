@@ -12,24 +12,20 @@ void main() {
         expect(resource.amount, equals(0));
         expect(resource.generationRate, equals(0.0));
         expect(resource.isGenerating, isFalse);
-        expect(resource.lastGenerationTime, isNotNull);
       });
 
       test('creates resource with custom values', () {
-        final now = DateTime.now();
         final resource = Resource(
           type: ResourceType.green,
           amount: 100,
           generationRate: 5.5,
           isGenerating: true,
-          lastGenerationTime: now,
         );
 
         expect(resource.type, equals(ResourceType.green));
         expect(resource.amount, equals(100));
         expect(resource.generationRate, equals(5.5));
         expect(resource.isGenerating, isTrue);
-        expect(resource.lastGenerationTime, equals(now));
       });
 
       test('throws error with negative amount', () {
@@ -166,7 +162,7 @@ void main() {
         expect(resource.amount, equals(10)); // No change
       });
 
-      test('generateResources increases amount over time', () async {
+      test('generateResources increases amount over time', () {
         final resource = Resource(
           type: ResourceType.blue,
           amount: 10,
@@ -174,13 +170,14 @@ void main() {
           isGenerating: true,
         );
 
-        // Wait a bit to allow time to pass
-        await Future<void>.delayed(const Duration(milliseconds: 150));
+        // Simulate 60 frames (1 second at 60 FPS)
+        for (var i = 0; i < 60; i++) {
+          resource.generateResources();
+        }
 
-        resource.generateResources();
-
-        // Should have generated at least 1 resource (10 * 0.15 = 1.5, floor = 1)
+        // Should have generated 10 resources (10/sec * 1 sec)
         expect(resource.amount, greaterThan(10));
+        expect(resource.amount, greaterThanOrEqualTo(20)); // 10 initial + 10 generated
       });
     });
 
@@ -275,14 +272,11 @@ void main() {
 
     group('Resource Equality', () {
       test('resources with same properties are equal', () {
-        final now = DateTime.now();
-
         final resource1 = Resource(
           type: ResourceType.blue,
           amount: 50,
           generationRate: 3.0,
           isGenerating: true,
-          lastGenerationTime: now,
         );
 
         final resource2 = Resource(
@@ -290,7 +284,6 @@ void main() {
           amount: 50,
           generationRate: 3.0,
           isGenerating: true,
-          lastGenerationTime: now,
         );
 
         expect(resource1, equals(resource2));
