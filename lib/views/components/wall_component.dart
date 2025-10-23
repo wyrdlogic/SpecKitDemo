@@ -22,6 +22,11 @@ final class WallComponent extends BaseGameComponent {
   static const double wallHeight = 120.0;
   static const double borderWidth = 3.0;
 
+  // Damage flash animation
+  double _damageFlashTimer = 0.0;
+  static const double _damageFlashDuration = 0.2; // 200ms flash
+  int _lastKnownHP = 0;
+
   @override
   Future<void> initialize() async {
     // Set size based on wall dimensions
@@ -29,6 +34,9 @@ final class WallComponent extends BaseGameComponent {
 
     // Center anchor
     anchor = Anchor.center;
+
+    // Initialize last known HP
+    _lastKnownHP = viewModel.currentHP;
 
     // Listen to wall ViewModel changes
     viewModel.addListener(_onWallChanged);
@@ -41,6 +49,17 @@ final class WallComponent extends BaseGameComponent {
     // Update position from ViewModel if needed
     final wallPos = viewModel.position;
     position = Vector2(wallPos.dx, wallPos.dy);
+
+    // Update damage flash timer
+    if (_damageFlashTimer > 0) {
+      _damageFlashTimer -= dt;
+    }
+
+    // Check if wall took damage and trigger flash
+    if (viewModel.currentHP < _lastKnownHP) {
+      _damageFlashTimer = _damageFlashDuration;
+    }
+    _lastKnownHP = viewModel.currentHP;
   }
 
   @override
@@ -59,24 +78,39 @@ final class WallComponent extends BaseGameComponent {
 
   void _renderActiveWall(Canvas canvas) {
     // Draw wall body with level-based color
+    final baseColor = viewModel.color;
+    
+    // Flash red when damaged
+    final wallColor = _damageFlashTimer > 0
+        ? Color.lerp(baseColor, Colors.red, 0.7)!
+        : baseColor;
+    
     final wallPaint = Paint()
-      ..color = viewModel.color
+      ..color = wallColor
       ..style = PaintingStyle.fill;
 
     final wallRect = size.toRect();
     canvas.drawRect(wallRect, wallPaint);
 
-    // Draw border
+    // Draw border (thicker and red during flash)
+    final borderColor = _damageFlashTimer > 0 ? Colors.red : Colors.black;
+    final borderThickness = _damageFlashTimer > 0 ? borderWidth + 2 : borderWidth;
+    
     final borderPaint = Paint()
-      ..color = Colors.black
+      ..color = borderColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = borderWidth;
+      ..strokeWidth = borderThickness;
 
     canvas.drawRect(wallRect, borderPaint);
 
     // Draw damage cracks if health is low
     if (viewModel.healthPercentage < 0.5) {
       _renderDamageCracks(canvas);
+    }
+    
+    // Draw additional damage effects if health is critical
+    if (viewModel.healthPercentage < 0.25) {
+      _renderCriticalDamageEffects(canvas);
     }
   }
 
@@ -185,6 +219,26 @@ final class WallComponent extends BaseGameComponent {
     canvas.drawLine(const Offset(20, 10), const Offset(35, 40), crackPaint);
     canvas.drawLine(const Offset(60, 20), const Offset(70, 50), crackPaint);
     canvas.drawLine(const Offset(15, 60), const Offset(30, 90), crackPaint);
+  }
+
+  void _renderCriticalDamageEffects(Canvas canvas) {
+    // Add more severe cracks and damage indicators
+    final severeCrackPaint = Paint()
+      ..color = Colors.red.shade900.withAlpha((0.6 * 255).round())
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.0;
+
+    // Additional severe damage cracks
+    canvas.drawLine(const Offset(40, 15), const Offset(50, 80), severeCrackPaint);
+    canvas.drawLine(const Offset(25, 50), const Offset(60, 45), severeCrackPaint);
+    canvas.drawLine(const Offset(50, 70), const Offset(40, 110), severeCrackPaint);
+    
+    // Add damage vignette effect
+    final vignettePaint = Paint()
+      ..color = Colors.red.withAlpha((0.15 * 255).round())
+      ..style = PaintingStyle.fill;
+    
+    canvas.drawRect(size.toRect(), vignettePaint);
   }
 
   void _onWallChanged() {

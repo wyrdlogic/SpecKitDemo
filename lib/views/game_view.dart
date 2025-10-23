@@ -8,6 +8,7 @@ import '../models/game_enums.dart';
 import 'components/wall_component.dart';
 import 'components/enemy_component.dart';
 import 'components/resource_hud.dart';
+import 'screens/game_over_screen.dart';
 
 /// Main game view that integrates Flame game engine with Flutter UI
 class GameView extends StatefulWidget {
@@ -31,12 +32,29 @@ class _GameViewState extends State<GameView> {
     _enemyViewModel = context.read<EnemyViewModel>();
     _resourceViewModel = context.read<ResourceViewModel>();
 
+    // Listen for wall destruction
+    _wallViewModel.addListener(_checkGameOver);
+
     // Initialize the Flame game with ViewModels
     _game = TowerDefenseGame(
       wallViewModel: _wallViewModel,
       enemyViewModel: _enemyViewModel,
       resourceViewModel: _resourceViewModel,
     );
+  }
+
+  void _checkGameOver() {
+    if (_wallViewModel.isDestroyed) {
+      // Wall is destroyed - show game over screen
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(
+          builder: (_) => GameOverScreen(
+            finalLevel: 1, // TODO: Track actual level
+            enemiesDefeated: 0, // TODO: Track enemies defeated
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -58,6 +76,7 @@ class _GameViewState extends State<GameView> {
 
   @override
   void dispose() {
+    _wallViewModel.removeListener(_checkGameOver);
     _game.onRemove();
     super.dispose();
   }

@@ -100,24 +100,24 @@
 ### Tests for User Story 2 (MANDATORY - Constitution Principle II) ✅
 
 - [X] T033 [P] [US2] Unit test for Enemy model in test/unit/models/enemy_test.dart
-- [ ] T034 [P] [US2] Unit test for EnemyViewModel in test/unit/viewmodels/enemy_viewmodel_test.dart
-- [ ] T035 [P] [US2] Unit test for EnemySpawnerService in test/unit/services/enemy_spawner_service_test.dart
+- [X] T034 [P] [US2] Unit test for EnemyViewModel in test/unit/viewmodels/enemy_viewmodel_test.dart
+- [X] T035 [P] [US2] Unit test for EnemySpawnerService in test/unit/services/enemy_spawner_service_test.dart
 - [ ] T036 [P] [US2] Widget test for enemy component in test/widget/components/enemy_component_test.dart
 - [ ] T037 [US2] Integration test for enemy spawning, movement, and combat in test/integration/us2_enemy_combat_test.dart
 
 ### Implementation for User Story 2
 
-- [ ] T038 [P] [US2] Create Enemy model in lib/models/enemy.dart
-- [ ] T039 [P] [US2] Create IEnemySpawner interface in lib/services/interfaces/i_enemy_spawner.dart
-- [ ] T040 [US2] Create EnemySpawnerService implementation in lib/services/enemy_spawner_service.dart
-- [ ] T041 [US2] Create EnemyViewModel in lib/viewmodels/enemy_viewmodel.dart
-- [ ] T042 [US2] Create EnemyComponent using Flame in lib/views/components/enemy_component.dart
-- [ ] T043 [US2] Extend WallComponent to handle damage visualization and HP display
-- [ ] T044 [US2] Add healing functionality to ResourceHUD and WallViewModel
-- [ ] T045 [US2] Integrate enemy spawning and movement into GameView
-- [ ] T046 [US2] Add collision detection between enemies and wall
-- [ ] T047 [US2] Add game over condition when wall HP reaches zero
-- [ ] T048 [US2] Wire up dependency injection for US2 services and ViewModels
+- [X] T038 [P] [US2] Create Enemy model in lib/models/enemy.dart
+- [X] T039 [P] [US2] Create IEnemySpawner interface in lib/services/interfaces/i_enemy_spawner.dart
+- [X] T040 [US2] Create EnemySpawnerService implementation in lib/services/enemy_spawner_service.dart
+- [X] T041 [US2] Create EnemyViewModel in lib/viewmodels/enemy_viewmodel.dart
+- [X] T042 [US2] Create EnemyComponent using Flame in lib/views/components/enemy_component.dart
+- [X] T043 [US2] Extend WallComponent to handle damage visualization and HP display
+- [X] T044 [US2] Add healing functionality to ResourceHUD and WallViewModel
+- [X] T045 [US2] Integrate enemy spawning and movement into GameView
+- [X] T046 [US2] Add collision detection between enemies and wall
+- [X] T047 [US2] Add game over condition when wall HP reaches zero
+- [X] T048 [US2] Wire up dependency injection for US2 services and ViewModels
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - complete combat system functional
 
