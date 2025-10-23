@@ -34,6 +34,9 @@ dependencies:
   # Game engine for Flutter
   flame: ^1.12.0
 
+  # State management
+  provider: ^6.1.1
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
