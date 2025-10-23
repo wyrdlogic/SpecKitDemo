@@ -65,7 +65,7 @@
 - [X] T017 [P] [US1] Unit test for ResourceViewModel in test/unit/viewmodels/resource_viewmodel_test.dart
 - [X] T018 [P] [US1] Unit test for WallViewModel in test/unit/viewmodels/wall_viewmodel_test.dart
 - [X] T019 [P] [US1] Widget test for resource buttons in test/widget/components/resource_hud_test.dart
-- [ ] T020 [P] [US1] Widget test for wall component in test/widget/components/wall_component_test.dart
+- [X] T020 [P] [US1] Widget test for wall component in test/widget/components/wall_component_test.dart
 - [ ] T021 [US1] Integration test for resource generation and wall upgrade flow in test/integration/us1_resource_upgrade_test.dart
 
 ### Implementation for User Story 1
@@ -102,7 +102,7 @@
 - [X] T033 [P] [US2] Unit test for Enemy model in test/unit/models/enemy_test.dart
 - [X] T034 [P] [US2] Unit test for EnemyViewModel in test/unit/viewmodels/enemy_viewmodel_test.dart
 - [X] T035 [P] [US2] Unit test for EnemySpawnerService in test/unit/services/enemy_spawner_service_test.dart
-- [ ] T036 [P] [US2] Widget test for enemy component in test/widget/components/enemy_component_test.dart
+- [X] T036 [P] [US2] Widget test for enemy component in test/widget/components/enemy_component_test.dart
 - [ ] T037 [US2] Integration test for enemy spawning, movement, and combat in test/integration/us2_enemy_combat_test.dart
 
 ### Implementation for User Story 2

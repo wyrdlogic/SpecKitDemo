@@ -74,7 +74,7 @@ class _GameViewState extends State<GameView> {
         if (mounted && !_wallViewModel.isDestroyed) {
           // Clear all existing enemies before starting next wave
           _enemyViewModel.clearAll();
-          
+
           _waveViewModel.advanceLevel();
           _waveViewModel.startWave(level: _waveViewModel.currentLevel);
         }
