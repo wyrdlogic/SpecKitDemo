@@ -40,12 +40,12 @@ final class WaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  /// Update wave timer (called each frame with delta time)
+  /// Update wave timer (called each frame with delta time at 60 FPS)
   void updateWave(double deltaTime) {
     if (!isWaveActive) return;
 
-    // Update timer each second
-    _currentWave.updateTimer();
+    // Update timer with frame-based timing
+    _currentWave = _currentWave.updateTimer(deltaTime);
     notifyListeners();
   }
 

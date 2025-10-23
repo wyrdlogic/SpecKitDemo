@@ -2,13 +2,13 @@
 class Wave {
   Wave({
     this.duration = 60,
-    int? remainingTime,
+    double? remainingTime,
     this.level = 1,
     this.isActive = false,
     double? enemySpawnRate,
     this.enemiesSpawned = 0,
     DateTime? startTime,
-  }) : _remainingTime = remainingTime ?? duration,
+  }) : _remainingTime = remainingTime ?? duration.toDouble(),
        _enemySpawnRate = enemySpawnRate ?? _calculateSpawnRate(level),
        _startTime = startTime {
     _validateState();
@@ -20,11 +20,11 @@ class Wave {
   final int enemiesSpawned; // Count for current wave
   final DateTime? _startTime;
 
-  int _remainingTime; // Countdown timer
+  double _remainingTime; // Countdown timer (internal: fractional seconds)
   double _enemySpawnRate; // Enemies per second
 
-  /// Countdown timer in seconds
-  int get remainingTime => _remainingTime;
+  /// Countdown timer in seconds (floored for display)
+  int get remainingTime => _remainingTime.floor();
 
   /// Enemies per second spawn rate
   double get enemySpawnRate => _enemySpawnRate;
@@ -41,8 +41,8 @@ class Wave {
   /// Whether the wave is completed
   bool get isComplete => _remainingTime <= 0;
 
-  /// Time elapsed since wave started (in seconds)
-  int get timeElapsed => duration - _remainingTime;
+  /// Time elapsed since wave started (in seconds, floored)
+  int get timeElapsed => (duration - _remainingTime).floor();
 
   /// Calculate base spawn rate for a given level
   static double _calculateSpawnRate(int level) {
@@ -50,12 +50,26 @@ class Wave {
     return 0.5 + (level - 1) * 0.25;
   }
 
-  /// Update the wave timer (call each second)
-  void updateTimer() {
-    if (isActive && _remainingTime > 0) {
-      _remainingTime--;
+  /// Update the wave timer with frame-based timing (60 FPS)
+  Wave updateTimer(double deltaTime) {
+    if (!isActive || _remainingTime <= 0) {
+      return this;
     }
-    _validateState();
+
+    final newRemainingTime = (_remainingTime - deltaTime).clamp(
+      0.0,
+      duration.toDouble(),
+    );
+
+    return Wave(
+      duration: duration,
+      remainingTime: newRemainingTime,
+      level: level,
+      isActive: isActive,
+      enemySpawnRate: _enemySpawnRate,
+      enemiesSpawned: enemiesSpawned,
+      startTime: _startTime,
+    );
   }
 
   /// Start a new wave with the given level
@@ -66,7 +80,7 @@ class Wave {
 
     return Wave(
       duration: duration,
-      remainingTime: duration,
+      remainingTime: duration.toDouble(),
       level: newLevel,
       isActive: true,
       enemySpawnRate: _calculateSpawnRate(newLevel),
@@ -149,7 +163,7 @@ class Wave {
   /// Create a copy with updated values
   Wave copyWith({
     int? duration,
-    int? remainingTime,
+    double? remainingTime,
     int? level,
     bool? isActive,
     double? enemySpawnRate,

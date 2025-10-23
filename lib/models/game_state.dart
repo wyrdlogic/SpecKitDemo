@@ -139,9 +139,9 @@ class GameStateModel {
     }
 
     // Update wave timer
-    final updatedWave = _currentWave.copyWith();
+    Wave updatedWave = _currentWave;
     if (updatedWave.isActive) {
-      updatedWave.updateTimer();
+      updatedWave = updatedWave.updateTimer(1.0 / 60.0); // Frame-based update
     }
 
     // Update enemies

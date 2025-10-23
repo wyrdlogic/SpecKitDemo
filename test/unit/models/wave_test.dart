@@ -47,17 +47,17 @@ void main() {
         var wave = Wave().startWave(1);
         final initialTime = wave.remainingTime;
 
-        wave.updateTimer();
+        wave = wave.updateTimer(1.0); // 1 second
 
         expect(wave.remainingTime, equals(initialTime - 1));
         expect(wave.isActive, isTrue);
       });
 
       test('updateTimer stops at zero', () {
-        var wave = Wave(duration: 60, remainingTime: 1).startWave(1);
-        wave = wave.copyWith(remainingTime: 1);
+        var wave = Wave(duration: 60, remainingTime: 1.0).startWave(1);
+        wave = wave.copyWith(remainingTime: 1.0);
 
-        wave.updateTimer();
+        wave = wave.updateTimer(1.0); // 1 second
 
         expect(wave.remainingTime, equals(0));
       });
