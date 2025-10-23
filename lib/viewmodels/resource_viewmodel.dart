@@ -23,6 +23,12 @@ final class ResourceViewModel extends BaseViewModel {
   Future<void> startGeneration(ResourceType type) async {
     final resource = _resources[type];
     if (resource != null) {
+      // Set initial generation rate if not already set
+      if (resource.generationRate == 0.0) {
+        resource.setGenerationRate(
+          1.0,
+        ); // Base generation rate: 1 resource per second
+      }
       resource.startGeneration();
       notifyListeners();
     }

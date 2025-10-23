@@ -26,35 +26,45 @@ class _GameViewState extends State<GameView> {
   late final EnemyViewModel _enemyViewModel;
   late final ResourceViewModel _resourceViewModel;
   late final WaveViewModel _waveViewModel;
+  bool _initialized = false;
 
   @override
-  void initState() {
-    super.initState();
-    // Get ViewModels from context
-    _wallViewModel = context.read<WallViewModel>();
-    _enemyViewModel = context.read<EnemyViewModel>();
-    _resourceViewModel = context.read<ResourceViewModel>();
-    _waveViewModel = context.read<WaveViewModel>();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    
+    // Initialize only once
+    if (!_initialized) {
+      _initialized = true;
+      
+      // Get ViewModels from context - safe to use context.read here
+      _wallViewModel = context.read<WallViewModel>();
+      _enemyViewModel = context.read<EnemyViewModel>();
+      _resourceViewModel = context.read<ResourceViewModel>();
+      _waveViewModel = context.read<WaveViewModel>();
 
-    // Listen for wall destruction
-    _wallViewModel.addListener(_checkGameOver);
+      // Listen for wall destruction
+      _wallViewModel.addListener(_checkGameOver);
 
-    // Listen for wave state changes
-    _waveViewModel.addListener(_onWaveStateChanged);
+      // Listen for wave state changes
+      _waveViewModel.addListener(_onWaveStateChanged);
 
-    // Initialize the Flame game with ViewModels
-    _game = TowerDefenseGame(
-      wallViewModel: _wallViewModel,
-      enemyViewModel: _enemyViewModel,
-      resourceViewModel: _resourceViewModel,
-      waveViewModel: _waveViewModel,
-    );
+      // Initialize the Flame game with ViewModels
+      _game = TowerDefenseGame(
+        wallViewModel: _wallViewModel,
+        enemyViewModel: _enemyViewModel,
+        resourceViewModel: _resourceViewModel,
+        waveViewModel: _waveViewModel,
+      );
 
-    // Start the first wave
-    _waveViewModel.startWave(level: 1);
-  }
-
-  void _onWaveStateChanged() {
+      // Schedule initialization for after the first frame is rendered
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          // Start the first wave
+          _waveViewModel.startWave(level: 1);
+        }
+      });
+    }
+  }  void _onWaveStateChanged() {
     // Check if wave just completed
     if (_waveViewModel.isWaveComplete && !_waveViewModel.isWaveActive) {
       // Wave is complete, advance level after delay
@@ -139,10 +149,13 @@ class TowerDefenseGame extends FlameGame {
     );
     await add(wallComponent);
 
-    // Start resource generation for all types
-    resourceViewModel.startGeneration(ResourceType.blue);
-    resourceViewModel.startGeneration(ResourceType.green);
-    resourceViewModel.startGeneration(ResourceType.yellow);
+    // Start resource generation after widget tree is fully built
+    // This is called from TowerDefenseGame which is created after first frame
+    Future.microtask(() {
+      resourceViewModel.startGeneration(ResourceType.blue);
+      resourceViewModel.startGeneration(ResourceType.green);
+      resourceViewModel.startGeneration(ResourceType.yellow);
+    });
   }
 
   @override
