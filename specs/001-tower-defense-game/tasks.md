@@ -23,12 +23,12 @@
 **Purpose**: Project initialization and Flutter/Flame structure
 
 - [x] T001 Create Flutter web project structure per implementation plan
-- [ ] T002 [P] Add Flame game engine dependency to pubspec.yaml
-- [ ] T003 [P] Configure web platform settings in web/index.html
-- [ ] T004 [P] Setup dependency injection container in lib/core/dependency_injection.dart
-- [ ] T005 [P] Create game constants configuration in lib/core/constants.dart
-- [ ] T006 [P] Setup Dart extension methods in lib/core/extensions.dart
-- [ ] T007 [P] Configure linting and formatting tools (analysis_options.yaml)
+- [x] T002 [P] Add Flame game engine dependency to pubspec.yaml
+- [x] T003 [P] Configure web platform settings in web/index.html
+- [x] T004 [P] Setup dependency injection container in lib/core/service_locator.dart
+- [x] T005 [P] Create game constants configuration in lib/core/constants.dart
+- [x] T006 [P] Setup Dart extension methods in lib/utils/extensions.dart
+- [x] T007 [P] Configure linting and formatting tools (analysis_options.yaml)
 
 ---
 
@@ -38,13 +38,13 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 Create base model classes and enums in lib/models/
-- [ ] T009 [P] Setup service interfaces following SOLID principles in lib/services/interfaces/
-- [ ] T010 [P] Create base ViewModel class with ChangeNotifier in lib/viewmodels/
-- [ ] T011 [P] Setup Flame game component base classes in lib/views/components/
-- [ ] T012 [P] Create utility classes in lib/utils/ (math_utils.dart, animation_utils.dart)
-- [ ] T013 Configure main.dart with Flame game integration and MVVM setup
-- [ ] T014 Setup test infrastructure and mocking framework in test/
+- [x] T008 Create base model classes and enums in lib/models/
+- [x] T009 [P] Setup service interfaces following SOLID principles in lib/services/interfaces/
+- [x] T010 [P] Create base ViewModel class with ChangeNotifier in lib/viewmodels/
+- [x] T011 [P] Setup Flame game component base classes in lib/views/components/
+- [x] T012 [P] Create utility classes in lib/utils/ (math_utils.dart, animation_utils.dart)
+- [x] T013 Configure main.dart with Flame game integration and MVVM setup
+- [x] T014 Setup test infrastructure and mocking framework in test/
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
