@@ -99,7 +99,7 @@
 
 ### Tests for User Story 2 (MANDATORY - Constitution Principle II) ✅
 
-- [ ] T033 [P] [US2] Unit test for Enemy model in test/unit/models/enemy_test.dart
+- [X] T033 [P] [US2] Unit test for Enemy model in test/unit/models/enemy_test.dart
 - [ ] T034 [P] [US2] Unit test for EnemyViewModel in test/unit/viewmodels/enemy_viewmodel_test.dart
 - [ ] T035 [P] [US2] Unit test for EnemySpawnerService in test/unit/services/enemy_spawner_service_test.dart
 - [ ] T036 [P] [US2] Widget test for enemy component in test/widget/components/enemy_component_test.dart

@@ -2,52 +2,53 @@ import 'package:flutter/material.dart';
 import '../../models/enemy.dart';
 import '../../models/game_enums.dart';
 
-/// Interface for spawning and managing enemies
+/// Interface for managing enemy wave spawning and progression
 abstract interface class IEnemySpawner {
-  /// Spawn a new enemy of the specified type
-  Enemy spawnEnemy(EnemyType type, Offset spawnPosition, Offset targetPosition);
+  /// Current difficulty level
+  int get currentLevel;
 
-  /// Spawn an enemy scaled for the current level
-  Enemy spawnEnemyForLevel(
-    EnemyType type,
-    int level,
-    Offset spawnPosition,
-    Offset targetPosition,
-  );
+  /// Current wave number
+  int get currentWave;
 
-  /// Get the spawn rate for the current wave level
-  double getSpawnRateForLevel(int level);
+  /// Whether enemies are currently being spawned
+  bool get isSpawning;
 
-  /// Get a random enemy type appropriate for the level
-  EnemyType getRandomEnemyType(int level);
+  /// Number of enemies remaining to spawn in current wave
+  int get remainingEnemiesInWave;
 
-  /// Calculate enemy stats scaled for level
-  ({int hp, int damage, double speed}) calculateEnemyStats(
-    EnemyType type,
-    int level,
-  );
+  /// Whether the current wave has been completed
+  bool get isWaveComplete;
 
-  /// Get all active enemies
-  List<Enemy> getActiveEnemies();
+  /// Start spawning enemies for a new wave
+  void startWave();
 
-  /// Update all enemies (movement, combat, cleanup)
-  void updateEnemies(double deltaTime, Offset wallPosition);
+  /// Stop spawning enemies (cancels current wave)
+  void stopWave();
 
-  /// Remove dead enemies and return score gained
-  int cleanupDeadEnemies();
+  /// Increase the difficulty level
+  void increaseLevel();
 
-  /// Clear all enemies (for game reset)
-  void clearAllEnemies();
+  /// Reset level to 1
+  void resetLevel();
 
-  /// Add an enemy to the active list
-  void addEnemy(Enemy enemy);
+  /// Reset service to initial state
+  void reset();
 
-  /// Remove an enemy from the active list
-  void removeEnemy(Enemy enemy);
+  /// Get the number of enemies for a given level
+  int getWaveEnemyCount(int level);
 
-  /// Stream of enemy updates
-  Stream<List<Enemy>> get enemyStream;
+  /// Get the enemy types that should spawn at a given level
+  List<EnemyType> getWaveEnemyTypes(int level);
 
-  /// Check if any enemy has reached the wall
-  List<Enemy> getEnemiesAtWall(Offset wallPosition, double attackRange);
+  /// Get the spawn delay between enemies for a given level
+  Duration getSpawnDelay(int level);
+
+  /// Check if next enemy can spawn based on cooldown
+  bool canSpawnNextEnemy();
+
+  /// Get the next enemy to spawn, or null if wave is complete or cooldown is active
+  Future<Enemy?> getNextEnemyToSpawn({
+    required Offset spawnPosition,
+    required Offset targetPosition,
+  });
 }
