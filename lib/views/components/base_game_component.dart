@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 /// - Performance monitoring
 /// - Position and size management
 abstract base class BaseGameComponent extends RectangleComponent
-    with TapCallbacks, HasGameRef {
+    with TapCallbacks, HasGameReference {
   BaseGameComponent({
     super.position,
     super.size,
@@ -19,13 +19,12 @@ abstract base class BaseGameComponent extends RectangleComponent
     super.anchor,
     super.children,
     super.priority,
-    this.debugColor,
+    Color? debugColor,
     this.debugLabel,
-  });
+  }) : _debugColor = debugColor;
 
   /// Color for debug rendering (null = no debug rendering)
-  @override
-  final Color? debugColor;
+  final Color? _debugColor;
 
   /// Label for debug information
   final String? debugLabel;
@@ -89,7 +88,7 @@ abstract base class BaseGameComponent extends RectangleComponent
     super.render(canvas);
 
     // Debug rendering
-    if (debugColor != null) {
+    if (_debugColor != null) {
       renderDebugInfo(canvas);
     }
   }
@@ -97,11 +96,12 @@ abstract base class BaseGameComponent extends RectangleComponent
   /// Render debug information
   @protected
   void renderDebugInfo(Canvas canvas) {
-    if (debugColor == null) return;
+    final debugCol = _debugColor;
+    if (debugCol == null) return;
 
     // Draw debug border
     final paint = Paint()
-      ..color = debugColor!
+      ..color = debugCol
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
@@ -113,7 +113,7 @@ abstract base class BaseGameComponent extends RectangleComponent
         text: TextSpan(
           text: debugLabel,
           style: TextStyle(
-            color: debugColor!,
+            color: debugCol,
             fontSize: 10,
             fontWeight: FontWeight.bold,
           ),
