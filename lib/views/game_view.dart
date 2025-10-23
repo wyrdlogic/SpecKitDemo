@@ -31,11 +31,11 @@ class _GameViewState extends State<GameView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    
+
     // Initialize only once
     if (!_initialized) {
       _initialized = true;
-      
+
       // Get ViewModels from context - safe to use context.read here
       _wallViewModel = context.read<WallViewModel>();
       _enemyViewModel = context.read<EnemyViewModel>();
@@ -64,7 +64,9 @@ class _GameViewState extends State<GameView> {
         }
       });
     }
-  }  void _onWaveStateChanged() {
+  }
+
+  void _onWaveStateChanged() {
     // Check if wave just completed
     if (_waveViewModel.isWaveComplete && !_waveViewModel.isWaveActive) {
       // Wave is complete, advance level after delay
