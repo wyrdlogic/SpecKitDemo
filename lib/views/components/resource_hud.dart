@@ -211,6 +211,7 @@ class ResourceHUD extends StatelessWidget {
               Colors.blue,
               () => resourceVM.startGeneration(ResourceType.blue),
               enabled: true,
+              key: const Key('gen_blue_button'),
             ),
             _buildResourceButton(
               'Gen Green',
@@ -218,6 +219,7 @@ class ResourceHUD extends StatelessWidget {
               Colors.green,
               () => resourceVM.startGeneration(ResourceType.green),
               enabled: true,
+              key: const Key('gen_green_button'),
             ),
             _buildResourceButton(
               'Gen Yellow',
@@ -225,6 +227,7 @@ class ResourceHUD extends StatelessWidget {
               Colors.yellow,
               () => resourceVM.startGeneration(ResourceType.yellow),
               enabled: true,
+              key: const Key('gen_yellow_button'),
             ),
             // Resource upgrade buttons (US4)
             _buildUpgradeButton(
@@ -236,6 +239,7 @@ class ResourceHUD extends StatelessWidget {
                 ResourceType.yellow,
                 resourceVM.getUpgradeCost(ResourceType.blue),
               ),
+              key: const Key('upgrade_blue_gen_button'),
             ),
             _buildUpgradeButton(
               'Upgrade Green Generation (${resourceVM.getUpgradeCost(ResourceType.green)} Yellow)',
@@ -246,6 +250,7 @@ class ResourceHUD extends StatelessWidget {
                 ResourceType.yellow,
                 resourceVM.getUpgradeCost(ResourceType.green),
               ),
+              key: const Key('upgrade_green_gen_button'),
             ),
             // Wall upgrade button
             _buildActionButton(
@@ -253,6 +258,7 @@ class ResourceHUD extends StatelessWidget {
               Icons.arrow_upward,
               () => _upgradeWall(resourceVM, wallVM),
               enabled: resourceVM.canAfford(ResourceType.blue, 50),
+              key: const Key('wall_upgrade_button'),
             ),
             // Wall heal button
             _buildActionButton(
@@ -262,6 +268,7 @@ class ResourceHUD extends StatelessWidget {
               enabled:
                   resourceVM.canAfford(ResourceType.green, 30) &&
                   wallVM.currentHP < wallVM.maxHP,
+              key: const Key('wall_heal_button'),
             ),
           ],
         ),
@@ -275,8 +282,10 @@ class ResourceHUD extends StatelessWidget {
     Color color,
     VoidCallback onPressed, {
     required bool enabled,
+    Key? key,
   }) {
     return ElevatedButton.icon(
+      key: key,
       onPressed: enabled ? onPressed : null,
       icon: Icon(icon),
       label: Text(label),
@@ -293,8 +302,10 @@ class ResourceHUD extends StatelessWidget {
     IconData icon,
     VoidCallback onPressed, {
     required bool enabled,
+    Key? key,
   }) {
     return ElevatedButton.icon(
+      key: key,
       onPressed: enabled ? onPressed : null,
       icon: Icon(icon),
       label: Text(label),
@@ -312,8 +323,10 @@ class ResourceHUD extends StatelessWidget {
     Color color,
     VoidCallback onPressed, {
     required bool enabled,
+    Key? key,
   }) {
     return ElevatedButton.icon(
+      key: key,
       onPressed: enabled ? onPressed : null,
       icon: Icon(icon, size: 18),
       label: Text(label, style: const TextStyle(fontSize: 12)),

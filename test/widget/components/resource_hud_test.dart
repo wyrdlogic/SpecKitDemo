@@ -82,9 +82,9 @@ void main() {
       testWidgets('generation buttons are enabled initially', (tester) async {
         await tester.pumpWidget(createTestWidget());
 
-        final blueButton = find.widgetWithText(ElevatedButton, 'Gen Blue');
-        final greenButton = find.widgetWithText(ElevatedButton, 'Gen Green');
-        final yellowButton = find.widgetWithText(ElevatedButton, 'Gen Yellow');
+        final blueButton = find.byKey(const Key('gen_blue_button'));
+        final greenButton = find.byKey(const Key('gen_green_button'));
+        final yellowButton = find.byKey(const Key('gen_yellow_button'));
 
         expect(tester.widget<ElevatedButton>(blueButton).onPressed, isNotNull);
         expect(tester.widget<ElevatedButton>(greenButton).onPressed, isNotNull);
@@ -102,7 +102,7 @@ void main() {
           isFalse,
         );
 
-        await tester.tap(find.text('Gen Blue'));
+        await tester.tap(find.byKey(const Key('gen_blue_button')));
         await tester.pump();
 
         expect(
@@ -130,10 +130,7 @@ void main() {
       ) async {
         await tester.pumpWidget(createTestWidget());
 
-        final upgradeButton = find.widgetWithText(
-          ElevatedButton,
-          'Upgrade (50 Blue)',
-        );
+        final upgradeButton = find.byKey(const Key('wall_upgrade_button'));
 
         expect(tester.widget<ElevatedButton>(upgradeButton).onPressed, isNull);
       });
@@ -145,10 +142,7 @@ void main() {
 
         await tester.pumpWidget(createTestWidget());
 
-        final upgradeButton = find.widgetWithText(
-          ElevatedButton,
-          'Upgrade (50 Blue)',
-        );
+        final upgradeButton = find.byKey(const Key('wall_upgrade_button'));
 
         expect(
           tester.widget<ElevatedButton>(upgradeButton).onPressed,
@@ -161,10 +155,7 @@ void main() {
 
         await tester.pumpWidget(createTestWidget());
 
-        final healButton = find.widgetWithText(
-          ElevatedButton,
-          'Heal (30 Green)',
-        );
+        final healButton = find.byKey(const Key('wall_heal_button'));
 
         expect(tester.widget<ElevatedButton>(healButton).onPressed, isNull);
       });
@@ -177,10 +168,7 @@ void main() {
 
           await tester.pumpWidget(createTestWidget());
 
-          final healButton = find.widgetWithText(
-            ElevatedButton,
-            'Heal (30 Green)',
-          );
+          final healButton = find.byKey(const Key('wall_heal_button'));
 
           expect(
             tester.widget<ElevatedButton>(healButton).onPressed,
@@ -196,7 +184,7 @@ void main() {
 
         final initialLevel = wallViewModel.level;
 
-        await tester.tap(find.text('Upgrade (50 Blue)'));
+        await tester.tap(find.byKey(const Key('wall_upgrade_button')));
         await tester.pump();
 
         expect(wallViewModel.level, equals(initialLevel + 1));
@@ -228,9 +216,8 @@ void main() {
       ) async {
         await tester.pumpWidget(createTestWidget());
 
-        final blueUpgradeButton = find.widgetWithText(
-          ElevatedButton,
-          'Upgrade Blue Generation (50 Yellow)',
+        final blueUpgradeButton = find.byKey(
+          const Key('upgrade_blue_gen_button'),
         );
 
         expect(
@@ -246,9 +233,8 @@ void main() {
 
         await tester.pumpWidget(createTestWidget());
 
-        final blueUpgradeButton = find.widgetWithText(
-          ElevatedButton,
-          'Upgrade Blue Generation (50 Yellow)',
+        final blueUpgradeButton = find.byKey(
+          const Key('upgrade_blue_gen_button'),
         );
 
         expect(
@@ -269,7 +255,7 @@ void main() {
             resourceViewModel.getResource(ResourceType.blue)?.generationRate ??
             0.0;
 
-        await tester.tap(find.text('Upgrade Blue Generation (50 Yellow)'));
+        await tester.tap(find.byKey(const Key('upgrade_blue_gen_button')));
         await tester.pump();
 
         final newRate =
@@ -295,7 +281,7 @@ void main() {
         expect(rateTextFinder, findsWidgets);
 
         // Tap upgrade button
-        await tester.tap(find.text('Upgrade Blue Generation (50 Yellow)'));
+        await tester.tap(find.byKey(const Key('upgrade_blue_gen_button')));
         await tester.pumpAndSettle();
 
         // Verify UI updated
@@ -304,6 +290,7 @@ void main() {
 
       testWidgets('upgrade cost increases after each upgrade', (tester) async {
         resourceViewModel.add(ResourceType.yellow, 500);
+        resourceViewModel.startGeneration(ResourceType.blue);
 
         await tester.pumpWidget(createTestWidget());
 
@@ -313,7 +300,7 @@ void main() {
           findsOneWidget,
         );
 
-        await tester.tap(find.text('Upgrade Blue Generation (50 Yellow)'));
+        await tester.tap(find.byKey(const Key('upgrade_blue_gen_button')));
         await tester.pumpAndSettle();
 
         // Second upgrade should cost more (exponential scaling)
@@ -335,7 +322,7 @@ void main() {
             resourceViewModel.getResource(ResourceType.green)?.generationRate ??
             0.0;
 
-        await tester.tap(find.text('Upgrade Green Generation (50 Yellow)'));
+        await tester.tap(find.byKey(const Key('upgrade_green_gen_button')));
         await tester.pump();
 
         final newRate =
@@ -356,7 +343,7 @@ void main() {
             0.0;
 
         // First upgrade
-        await tester.tap(find.text('Upgrade Blue Generation (50 Yellow)'));
+        await tester.tap(find.byKey(const Key('upgrade_blue_gen_button')));
         await tester.pumpAndSettle();
 
         final rateAfterFirst =
@@ -364,7 +351,7 @@ void main() {
             0.0;
 
         // Second upgrade
-        await tester.tap(find.text('Upgrade Blue Generation (75 Yellow)'));
+        await tester.tap(find.byKey(const Key('upgrade_blue_gen_button')));
         await tester.pumpAndSettle();
 
         final rateAfterSecond =
