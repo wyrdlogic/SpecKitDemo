@@ -4,10 +4,12 @@ import 'package:provider/provider.dart';
 import '../viewmodels/resource_viewmodel.dart';
 import '../viewmodels/wall_viewmodel.dart';
 import '../viewmodels/enemy_viewmodel.dart';
+import '../viewmodels/wave_viewmodel.dart';
 import '../models/game_enums.dart';
 import 'components/wall_component.dart';
 import 'components/enemy_component.dart';
 import 'components/resource_hud.dart';
+import 'components/wave_timer.dart';
 import 'screens/game_over_screen.dart';
 
 /// Main game view that integrates Flame game engine with Flutter UI
@@ -23,6 +25,7 @@ class _GameViewState extends State<GameView> {
   late final WallViewModel _wallViewModel;
   late final EnemyViewModel _enemyViewModel;
   late final ResourceViewModel _resourceViewModel;
+  late final WaveViewModel _waveViewModel;
 
   @override
   void initState() {
@@ -31,16 +34,37 @@ class _GameViewState extends State<GameView> {
     _wallViewModel = context.read<WallViewModel>();
     _enemyViewModel = context.read<EnemyViewModel>();
     _resourceViewModel = context.read<ResourceViewModel>();
+    _waveViewModel = context.read<WaveViewModel>();
 
     // Listen for wall destruction
     _wallViewModel.addListener(_checkGameOver);
+
+    // Listen for wave state changes
+    _waveViewModel.addListener(_onWaveStateChanged);
 
     // Initialize the Flame game with ViewModels
     _game = TowerDefenseGame(
       wallViewModel: _wallViewModel,
       enemyViewModel: _enemyViewModel,
       resourceViewModel: _resourceViewModel,
+      waveViewModel: _waveViewModel,
     );
+
+    // Start the first wave
+    _waveViewModel.startWave(level: 1);
+  }
+
+  void _onWaveStateChanged() {
+    // Check if wave just completed
+    if (_waveViewModel.isWaveComplete && !_waveViewModel.isWaveActive) {
+      // Wave is complete, advance level after delay
+      Future.delayed(const Duration(seconds: 3), () {
+        if (mounted && !_wallViewModel.isDestroyed) {
+          _waveViewModel.advanceLevel();
+          _waveViewModel.startWave(level: _waveViewModel.currentLevel);
+        }
+      });
+    }
   }
 
   void _checkGameOver() {
@@ -49,8 +73,8 @@ class _GameViewState extends State<GameView> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(
           builder: (_) => GameOverScreen(
-            finalLevel: 1, // TODO: Track actual level
-            enemiesDefeated: 0, // TODO: Track enemies defeated
+            finalLevel: _waveViewModel.currentLevel,
+            enemiesDefeated: _enemyViewModel.enemies.length,
           ),
         ),
       );
@@ -69,6 +93,8 @@ class _GameViewState extends State<GameView> {
             overlayBuilderMap: {'hud': (context, game) => const ResourceHUD()},
             initialActiveOverlays: const ['hud'],
           ),
+          // Wave timer in top right
+          Positioned(top: 16, right: 16, child: const WaveTimer()),
         ],
       ),
     );
@@ -77,6 +103,7 @@ class _GameViewState extends State<GameView> {
   @override
   void dispose() {
     _wallViewModel.removeListener(_checkGameOver);
+    _waveViewModel.removeListener(_onWaveStateChanged);
     _game.onRemove();
     super.dispose();
   }
@@ -88,14 +115,17 @@ class TowerDefenseGame extends FlameGame {
     required this.wallViewModel,
     required this.enemyViewModel,
     required this.resourceViewModel,
+    required this.waveViewModel,
   });
 
   late WallComponent wallComponent;
   final WallViewModel wallViewModel;
   final EnemyViewModel enemyViewModel;
   final ResourceViewModel resourceViewModel;
+  final WaveViewModel waveViewModel;
 
   final List<EnemyComponent> _enemyComponents = [];
+  double _spawnTimer = 0.0;
 
   @override
   Future<void> onLoad() async {
@@ -119,6 +149,14 @@ class TowerDefenseGame extends FlameGame {
   void update(double dt) {
     super.update(dt);
 
+    // Update wave timer
+    if (waveViewModel.isWaveActive) {
+      waveViewModel.updateWave(dt);
+
+      // Handle enemy spawning based on wave
+      _updateEnemySpawning(dt);
+    }
+
     // Update enemy ViewModels with delta time for movement
     if (enemyViewModel.activeEnemyCount > 0) {
       enemyViewModel.updateEnemies(dt);
@@ -135,9 +173,55 @@ class TowerDefenseGame extends FlameGame {
     for (final enemy in enemiesAtWall) {
       if (enemy.canAttack) {
         wallViewModel.takeDamage(enemy.damage);
-        enemy.attack(); // Use attack() method instead of performAttack()
+        enemy.attack();
       }
     }
+  }
+
+  /// Update enemy spawning based on wave progress
+  void _updateEnemySpawning(double dt) {
+    if (!waveViewModel.isWaveActive) return;
+
+    _spawnTimer += dt;
+
+    // Check if we should spawn an enemy
+    if (waveViewModel.shouldSpawnEnemy()) {
+      _spawnEnemy();
+      waveViewModel.incrementEnemySpawnCount();
+      _spawnTimer = 0.0;
+    }
+  }
+
+  /// Spawn a single enemy
+  void _spawnEnemy() {
+    // Random spawn position along the left edge
+    final y = (size.y * (0.2 + (Vector2.random().y * 0.6)));
+    final spawnPosition = Offset(0, y);
+
+    // Target is the wall position
+    final target = Offset(size.x / 2, size.y / 2);
+
+    // Spawn enemy using the ViewModel
+    enemyViewModel.spawnEnemies(
+      type: _getEnemyTypeForLevel(waveViewModel.currentLevel),
+      positions: [spawnPosition],
+      target: target,
+      level: waveViewModel.currentLevel,
+    );
+  }
+
+  /// Get enemy type based on current level
+  EnemyType _getEnemyTypeForLevel(int level) {
+    if (level < 3) return EnemyType.basic;
+    if (level < 5) {
+      // Mix of basic and fast
+      return Vector2.random().x > 0.5 ? EnemyType.fast : EnemyType.basic;
+    }
+    // Mix of all types
+    final rand = Vector2.random().x;
+    if (rand < 0.33) return EnemyType.basic;
+    if (rand < 0.66) return EnemyType.fast;
+    return EnemyType.strong;
   }
 
   /// Synchronize Flame components with enemy models

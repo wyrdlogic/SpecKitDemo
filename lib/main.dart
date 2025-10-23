@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'viewmodels/resource_viewmodel.dart';
 import 'viewmodels/wall_viewmodel.dart';
 import 'viewmodels/enemy_viewmodel.dart';
+import 'viewmodels/wave_viewmodel.dart';
 import 'views/game_view.dart';
 
 Future<void> main() async {
@@ -44,6 +45,7 @@ class TowerDefenseApp extends StatelessWidget {
             ),
           ),
           ChangeNotifierProvider(create: (_) => EnemyViewModel()),
+          ChangeNotifierProvider(create: (_) => WaveViewModel()),
         ],
         child: const GameView(),
       ),
