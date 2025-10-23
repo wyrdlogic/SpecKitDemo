@@ -1,16 +1,18 @@
-# Quick Start Guide: Tower Defense Game Development
+# Quick Start Guide: Tower Defense Game Development (MVVM + Flame)
 
-**Purpose**: Get developers up and running with the tower defense game project  
-**Target Audience**: Flutter developers joining the project  
-**Generated**: October 23, 2025
+**Purpose**: Get developers up and running with the MVVM tower defense game project  
+**Target Audience**: Flutter developers familiar with MVVM patterns and game development  
+**Generated**: October 23, 2025  
+**Architecture**: MVVM with Flame game engine, SOLID principles
 
 ## Prerequisites
 
 - Flutter SDK 3.16+ installed and configured
 - Dart SDK 3.2+ (included with Flutter)
-- Android Studio or VS Code with Flutter extensions
-- Android device or emulator for testing
+- VS Code or Android Studio with Flutter extensions
+- Chrome or other web browser for testing
 - Git for version control
+- Basic understanding of MVVM architecture and dependency injection
 
 ## Project Setup
 
@@ -36,13 +38,16 @@ flutter pub get
 flutter build android --debug
 ```
 
-### 3. Development Environment
+### 3. Web Development Environment
 ```bash
-# Start Android emulator (if not already running)
-flutter emulators --launch [emulator_id]
+# Enable Flutter web (if not already enabled)
+flutter config --enable-web
 
-# Run the app in debug mode
-flutter run
+# Run the web app in debug mode
+flutter run -d chrome
+
+# Or run in any available browser
+flutter run -d web-server --web-port 8080
 ```
 
 ## Project Architecture Overview
@@ -58,10 +63,11 @@ lib/
 ```
 
 ### Key Design Principles
-- **State Management**: Built-in Flutter StatefulWidget with setState
-- **Game Loop**: AnimationController with Ticker for 60 FPS updates
-- **Rendering**: CustomPainter for 2D game elements, Material widgets for UI
-- **Testing**: TDD approach with comprehensive widget, unit, and integration tests
+- **Architecture**: MVVM pattern with ChangeNotifier ViewModels for presentation logic
+- **Game Engine**: Flame engine for 2D rendering, game loop, and component management  
+- **Dependency Injection**: Service interfaces with IoC container for testable architecture
+- **SOLID Principles**: Single responsibility, dependency inversion, interface segregation
+- **Testing**: TDD approach with ViewModel unit tests, Flame component tests, integration tests
 
 ## Development Workflow
 

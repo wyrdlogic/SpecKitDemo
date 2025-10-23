@@ -1,10 +1,19 @@
-# Data Model: Tower Defense Resource Game
+# Data Model: Tower Defense Resource Game (MVVM Architecture)
 
 **Generated**: October 23, 2025  
 **Feature**: Tower Defense Resource Game  
-**Source**: Extracted from functional requirements in spec.md
+**Source**: Extracted from functional requirements in spec.md  
+**Architecture**: MVVM pattern with Flame game engine integration
 
-## Core Entities
+## MVVM Layer Architecture
+
+**Models**: Domain entities representing game state (Wall, Enemy, Resource, Wave, GameState)  
+**ViewModels**: Presentation logic managing model state and UI interactions (GameViewModel, WallViewModel, ResourceViewModel, EnemyViewModel, WaveViewModel)  
+**Views**: Flame components and Flutter widgets for rendering (GameView, WallComponent, EnemyComponent, ResourceHUD)  
+
+**Data Flow**: User Input → View → ViewModel → Service → Model → ViewModel → View Update
+
+## Core Entities (Models Layer)
 
 ### Wall
 Central defensive structure that players must protect.

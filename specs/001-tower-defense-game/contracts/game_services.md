@@ -1,15 +1,18 @@
-# Game Engine API Contracts
+# Game Architecture Contracts (MVVM + SOLID)
 
-**Purpose**: Define method signatures for core game logic services  
-**Target**: Flutter/Dart implementation  
-**Generated**: October 23, 2025
+**Purpose**: Define interfaces and contracts for MVVM architecture with SOLID principles  
+**Target**: Flutter/Dart with Flame game engine  
+**Generated**: October 23, 2025  
+**Architecture**: MVVM pattern with Dependency Injection
 
-## GameEngine Service
+## Service Interfaces (Dependency Inversion Principle)
 
-Main game loop and state management controller.
+### IGameEngine Service Interface
+
+Main game loop and state management abstraction.
 
 ```dart
-abstract class GameEngine {
+abstract class IGameEngine {
   // Game lifecycle management
   Future<void> initializeGame();
   void startGame();
@@ -17,7 +20,7 @@ abstract class GameEngine {
   void resumeGame();
   void endGame();
   
-  // Frame-by-frame updates
+  // Frame-by-frame updates (called by Flame game loop)
   void updateGameState(Duration deltaTime);
   void processEnemyMovement(Duration deltaTime);
   void updateResourceGeneration(Duration deltaTime);
@@ -31,12 +34,12 @@ abstract class GameEngine {
 }
 ```
 
-## ResourceManager Service
+### IResourceManager Service Interface
 
-Resource generation, spending, and upgrade logic.
+Resource generation, spending, and upgrade logic abstraction.
 
 ```dart
-abstract class ResourceManager {
+abstract class IResourceManager {
   // Resource generation
   void startResourceGeneration(ResourceType type);
   void stopResourceGeneration(ResourceType type);
@@ -56,6 +59,38 @@ abstract class ResourceManager {
   // State queries
   int getResourceAmount(ResourceType type);
   Map<ResourceType, int> getAllResources();
+}
+```
+
+## ViewModel Contracts (MVVM Presentation Layer)
+
+### GameViewModel
+
+Main game state management and coordination ViewModel.
+
+```dart
+abstract class GameViewModel extends ChangeNotifier {
+  // Game lifecycle
+  Future<void> initializeGame();
+  void startNewGame();
+  void pauseGame();
+  void resumeGame();
+  void endGame();
+  
+  // State properties (observable)
+  GameStatus get gameStatus;
+  int get currentLevel;
+  Duration get remainingTime;
+  bool get isPaused;
+  
+  // User actions
+  void onResourceButtonPressed(ResourceType type);
+  void onWallUpgradePressed();
+  void onWallHealPressed();
+  void onResourceUpgradePressed(ResourceType type);
+  
+  // Game loop integration
+  void onGameTick(Duration deltaTime);
 }
 ```
 
