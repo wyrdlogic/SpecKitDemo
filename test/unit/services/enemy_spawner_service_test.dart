@@ -227,6 +227,13 @@ void main() {
             spawnPosition: spawnPosition,
             targetPosition: targetPosition,
           );
+
+          // Simulate spawn delay frames for next enemy
+          if (spawnerService.remainingEnemiesInWave > 0) {
+            for (var i = 0; i < 120; i++) {
+              spawnerService.updateSpawnTimer();
+            }
+          }
         }
 
         expect(spawnerService.isSpawning, isFalse);
@@ -262,6 +269,14 @@ void main() {
 
         final canSpawn2 = spawnerService.canSpawnNextEnemy();
         expect(canSpawn2, isFalse); // Must wait for cooldown
+
+        // Simulate frames passing (spawn delay is 120 frames at level 1)
+        for (var i = 0; i < 120; i++) {
+          spawnerService.updateSpawnTimer();
+        }
+
+        final canSpawn3 = spawnerService.canSpawnNextEnemy();
+        expect(canSpawn3, isTrue); // Cooldown complete
       });
 
       test('spawn delay decreases at higher levels', () {
@@ -283,6 +298,13 @@ void main() {
             spawnPosition: spawnPosition,
             targetPosition: targetPosition,
           );
+
+          // Simulate spawn delay frames
+          if (spawnerService.remainingEnemiesInWave > 0) {
+            for (var i = 0; i < 120; i++) {
+              spawnerService.updateSpawnTimer();
+            }
+          }
         }
 
         expect(spawnerService.isWaveComplete, isTrue);
@@ -308,6 +330,13 @@ void main() {
             spawnPosition: spawnPosition,
             targetPosition: targetPosition,
           );
+
+          // Simulate spawn delay frames
+          if (spawnerService.remainingEnemiesInWave > 0) {
+            for (var i = 0; i < 120; i++) {
+              spawnerService.updateSpawnTimer();
+            }
+          }
         }
 
         expect(spawnerService.currentWave, equals(1));
@@ -349,6 +378,13 @@ void main() {
           );
           if (enemy != null) {
             spawnedTypes.add(enemy.type);
+          }
+
+          // Simulate spawn delay frames
+          if (spawnerService.remainingEnemiesInWave > 0) {
+            for (var i = 0; i < 120; i++) {
+              spawnerService.updateSpawnTimer();
+            }
           }
         }
 

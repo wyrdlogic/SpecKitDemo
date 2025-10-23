@@ -9,11 +9,11 @@ class EnemySpawnerService implements IEnemySpawner {
   int _currentWave = 0;
   bool _isSpawning = false;
   List<EnemyType> _currentWaveEnemies = [];
-  DateTime? _lastSpawnTime;
+  int _framesSinceLastSpawn = 0;
 
-  // Configuration constants
-  static const Duration _baseSpawnDelay = Duration(seconds: 2);
-  static const Duration _minSpawnDelay = Duration(milliseconds: 500);
+  // Configuration constants (frame-based at 60 FPS)
+  static const int _baseSpawnDelayFrames = 120; // 2 seconds at 60 FPS
+  static const int _minSpawnDelayFrames = 30; // 0.5 seconds at 60 FPS
   static const int _baseEnemiesPerWave = 5;
   static const double _enemiesScalingFactor = 1.5;
 
@@ -38,14 +38,14 @@ class EnemySpawnerService implements IEnemySpawner {
     _currentWave++;
     _isSpawning = true;
     _currentWaveEnemies = getWaveEnemyTypes(_currentLevel);
-    _lastSpawnTime = null; // First enemy spawns immediately
+    _framesSinceLastSpawn = 0; // First enemy spawns immediately
   }
 
   @override
   void stopWave() {
     _isSpawning = false;
     _currentWaveEnemies.clear();
-    _lastSpawnTime = null;
+    _framesSinceLastSpawn = 0;
   }
 
   @override
@@ -65,7 +65,7 @@ class EnemySpawnerService implements IEnemySpawner {
     _currentWave = 0;
     _isSpawning = false;
     _currentWaveEnemies.clear();
-    _lastSpawnTime = null;
+    _framesSinceLastSpawn = 0;
   }
 
   @override
@@ -125,11 +125,22 @@ class EnemySpawnerService implements IEnemySpawner {
   @override
   Duration getSpawnDelay(int level) {
     // Spawn delay decreases with level but has a minimum
-    final delayMs = (_baseSpawnDelay.inMilliseconds / (1 + level * 0.1))
-        .round();
-    final delay = Duration(milliseconds: delayMs);
+    // Convert frame-based delays to Duration for backward compatibility
+    final delayFrames = (_baseSpawnDelayFrames / (1 + level * 0.1)).round();
+    final clampedFrames = delayFrames > _minSpawnDelayFrames
+        ? delayFrames
+        : _minSpawnDelayFrames;
 
-    return delay.compareTo(_minSpawnDelay) > 0 ? delay : _minSpawnDelay;
+    // Convert frames to milliseconds (60 FPS = 16.67ms per frame)
+    return Duration(milliseconds: (clampedFrames * 16.67).round());
+  }
+
+  /// Get spawn delay in frames (60 FPS)
+  int getSpawnDelayFrames(int level) {
+    final delayFrames = (_baseSpawnDelayFrames / (1 + level * 0.1)).round();
+    return delayFrames > _minSpawnDelayFrames
+        ? delayFrames
+        : _minSpawnDelayFrames;
   }
 
   @override
@@ -138,17 +149,21 @@ class EnemySpawnerService implements IEnemySpawner {
       return false;
     }
 
-    // First enemy can spawn immediately
-    if (_lastSpawnTime == null) {
+    // First enemy can spawn immediately (frame counter starts at 0)
+    if (_framesSinceLastSpawn == 0) {
       return true;
     }
 
-    // Check if enough time has passed
-    final now = DateTime.now();
-    final timeSinceLastSpawn = now.difference(_lastSpawnTime!);
-    final spawnDelay = getSpawnDelay(_currentLevel);
+    // Check if enough frames have passed
+    final requiredFrames = getSpawnDelayFrames(_currentLevel);
+    return _framesSinceLastSpawn >= requiredFrames;
+  }
 
-    return timeSinceLastSpawn >= spawnDelay;
+  /// Update frame counter (call each game frame at 60 FPS)
+  void updateSpawnTimer() {
+    if (_isSpawning && _framesSinceLastSpawn > 0) {
+      _framesSinceLastSpawn++;
+    }
   }
 
   @override
@@ -163,8 +178,8 @@ class EnemySpawnerService implements IEnemySpawner {
     // Get next enemy type from queue
     final enemyType = _currentWaveEnemies.removeAt(0);
 
-    // Update spawn time
-    _lastSpawnTime = DateTime.now();
+    // Reset frame counter for next spawn
+    _framesSinceLastSpawn = 1; // Start counting from 1 for next cooldown
 
     // Stop spawning if wave is complete
     if (_currentWaveEnemies.isEmpty) {

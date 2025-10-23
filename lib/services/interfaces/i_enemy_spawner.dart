@@ -46,6 +46,9 @@ abstract interface class IEnemySpawner {
   /// Check if next enemy can spawn based on cooldown
   bool canSpawnNextEnemy();
 
+  /// Update spawn timer (call each game frame at 60 FPS)
+  void updateSpawnTimer();
+
   /// Get the next enemy to spawn, or null if wave is complete or cooldown is active
   Future<Enemy?> getNextEnemyToSpawn({
     required Offset spawnPosition,
