@@ -74,13 +74,17 @@ void main() {
         await viewModel.startGeneration(ResourceType.blue);
 
         // Simulate 60 frames (1 second at 60 FPS)
-        for (var i = 0; i < 61; i++) { // One extra frame for tolerance
+        for (var i = 0; i < 61; i++) {
+          // One extra frame for tolerance
           viewModel.updateGeneration();
         }
 
         // Should have generated at least 10 resources (10/sec * 1 sec)
         expect(viewModel.getAmount(ResourceType.blue), greaterThan(0));
-        expect(viewModel.getAmount(ResourceType.blue), greaterThanOrEqualTo(10));
+        expect(
+          viewModel.getAmount(ResourceType.blue),
+          greaterThanOrEqualTo(10),
+        );
       });
 
       test('updateGeneration notifies listeners', () {

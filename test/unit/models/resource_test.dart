@@ -177,7 +177,10 @@ void main() {
 
         // Should have generated 10 resources (10/sec * 1 sec)
         expect(resource.amount, greaterThan(10));
-        expect(resource.amount, greaterThanOrEqualTo(20)); // 10 initial + 10 generated
+        expect(
+          resource.amount,
+          greaterThanOrEqualTo(20),
+        ); // 10 initial + 10 generated
       });
     });
 

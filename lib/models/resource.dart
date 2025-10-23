@@ -14,7 +14,8 @@ class Resource {
   }
 
   final ResourceType type;
-  double _amount; // Store as double internally to accumulate fractional resources
+  double
+  _amount; // Store as double internally to accumulate fractional resources
   double _generationRate;
   bool _isGenerating;
 
@@ -63,7 +64,7 @@ class Resource {
     // Assuming 60 FPS: 1 second = 60 frames
     // So each frame represents 1/60th of a second
     const double deltaTime = 1.0 / 60.0;
-    
+
     // Accumulate fractional resources - don't floor until getting amount
     _amount += _generationRate * deltaTime;
     _validateState();
@@ -144,12 +145,7 @@ class Resource {
 
   @override
   int get hashCode {
-    return Object.hash(
-      type,
-      _amount,
-      _generationRate,
-      _isGenerating,
-    );
+    return Object.hash(type, _amount, _generationRate, _isGenerating);
   }
 
   @override

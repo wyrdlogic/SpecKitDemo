@@ -155,10 +155,14 @@ void main() {
       test('full gameplay loop: generate → upgrade → damage → heal', () async {
         // Step 1: Generate blue resources (need 50 for upgrade, at 1/sec = 50 seconds = 3000 frames)
         await resourceVM.startGeneration(ResourceType.blue);
-        for (var i = 0; i < 3010; i++) { // Add a few extra frames for floating point tolerance
+        for (var i = 0; i < 3010; i++) {
+          // Add a few extra frames for floating point tolerance
           resourceVM.updateGeneration();
         }
-        expect(resourceVM.getAmount(ResourceType.blue), greaterThanOrEqualTo(wallUpgradeCost));
+        expect(
+          resourceVM.getAmount(ResourceType.blue),
+          greaterThanOrEqualTo(wallUpgradeCost),
+        );
 
         // Step 2: Upgrade wall
         resourceVM.spend(ResourceType.blue, wallUpgradeCost);
@@ -209,7 +213,10 @@ void main() {
         wallVM.upgrade();
 
         // Now cannot afford another operation
-        expect(resourceVM.getAmount(ResourceType.blue), lessThan(wallUpgradeCost));
+        expect(
+          resourceVM.getAmount(ResourceType.blue),
+          lessThan(wallUpgradeCost),
+        );
       });
     });
 
@@ -222,7 +229,10 @@ void main() {
           resourceVM.updateGeneration();
         }
         final amount1 = resourceVM.getAmount(ResourceType.blue);
-        expect(amount1, greaterThanOrEqualTo(1)); // Should have at least 1 resource after 1 second
+        expect(
+          amount1,
+          greaterThanOrEqualTo(1),
+        ); // Should have at least 1 resource after 1 second
 
         // Simulate another second
         for (var i = 0; i < 61; i++) {
@@ -230,8 +240,14 @@ void main() {
         }
         final amount2 = resourceVM.getAmount(ResourceType.blue);
 
-        expect(amount2, greaterThan(amount1)); // Should have more after 2 seconds
-        expect(amount2, greaterThanOrEqualTo(2)); // Should have at least 2 resources after 2 seconds
+        expect(
+          amount2,
+          greaterThan(amount1),
+        ); // Should have more after 2 seconds
+        expect(
+          amount2,
+          greaterThanOrEqualTo(2),
+        ); // Should have at least 2 resources after 2 seconds
       });
 
       test('spending updates state correctly', () {
