@@ -74,23 +74,17 @@ void main() {
       testWidgets('shows all generation buttons', (tester) async {
         await tester.pumpWidget(createTestWidget());
 
-        expect(find.text('Generate Blue'), findsOneWidget);
-        expect(find.text('Generate Green'), findsOneWidget);
-        expect(find.text('Generate Yellow'), findsOneWidget);
+        expect(find.text('Gen Blue'), findsOneWidget);
+        expect(find.text('Gen Green'), findsOneWidget);
+        expect(find.text('Gen Yellow'), findsOneWidget);
       });
 
       testWidgets('generation buttons are enabled initially', (tester) async {
         await tester.pumpWidget(createTestWidget());
 
-        final blueButton = find.widgetWithText(ElevatedButton, 'Generate Blue');
-        final greenButton = find.widgetWithText(
-          ElevatedButton,
-          'Generate Green',
-        );
-        final yellowButton = find.widgetWithText(
-          ElevatedButton,
-          'Generate Yellow',
-        );
+        final blueButton = find.widgetWithText(ElevatedButton, 'Gen Blue');
+        final greenButton = find.widgetWithText(ElevatedButton, 'Gen Green');
+        final yellowButton = find.widgetWithText(ElevatedButton, 'Gen Yellow');
 
         expect(tester.widget<ElevatedButton>(blueButton).onPressed, isNotNull);
         expect(tester.widget<ElevatedButton>(greenButton).onPressed, isNotNull);
@@ -108,7 +102,7 @@ void main() {
           isFalse,
         );
 
-        await tester.tap(find.text('Generate Blue'));
+        await tester.tap(find.text('Gen Blue'));
         await tester.pump();
 
         expect(
@@ -122,13 +116,13 @@ void main() {
       testWidgets('shows wall upgrade button', (tester) async {
         await tester.pumpWidget(createTestWidget());
 
-        expect(find.text('Upgrade Wall (50 Blue)'), findsOneWidget);
+        expect(find.text('Upgrade (50 Blue)'), findsOneWidget);
       });
 
       testWidgets('shows wall heal button', (tester) async {
         await tester.pumpWidget(createTestWidget());
 
-        expect(find.text('Heal Wall (30 Green)'), findsOneWidget);
+        expect(find.text('Heal (30 Green)'), findsOneWidget);
       });
 
       testWidgets('upgrade button disabled when insufficient resources', (
@@ -138,7 +132,7 @@ void main() {
 
         final upgradeButton = find.widgetWithText(
           ElevatedButton,
-          'Upgrade Wall (50 Blue)',
+          'Upgrade (50 Blue)',
         );
 
         expect(tester.widget<ElevatedButton>(upgradeButton).onPressed, isNull);
@@ -153,7 +147,7 @@ void main() {
 
         final upgradeButton = find.widgetWithText(
           ElevatedButton,
-          'Upgrade Wall (50 Blue)',
+          'Upgrade (50 Blue)',
         );
 
         expect(
@@ -169,7 +163,7 @@ void main() {
 
         final healButton = find.widgetWithText(
           ElevatedButton,
-          'Heal Wall (30 Green)',
+          'Heal (30 Green)',
         );
 
         expect(tester.widget<ElevatedButton>(healButton).onPressed, isNull);
@@ -185,7 +179,7 @@ void main() {
 
           final healButton = find.widgetWithText(
             ElevatedButton,
-            'Heal Wall (30 Green)',
+            'Heal (30 Green)',
           );
 
           expect(
@@ -202,7 +196,7 @@ void main() {
 
         final initialLevel = wallViewModel.level;
 
-        await tester.tap(find.text('Upgrade Wall (50 Blue)'));
+        await tester.tap(find.text('Upgrade (50 Blue)'));
         await tester.pump();
 
         expect(wallViewModel.level, equals(initialLevel + 1));
@@ -392,7 +386,7 @@ void main() {
       testWidgets('displays wall level', (tester) async {
         await tester.pumpWidget(createTestWidget());
 
-        expect(find.textContaining('Level:'), findsOneWidget);
+        expect(find.textContaining('Lv:'), findsOneWidget);
       });
 
       testWidgets('updates when wall takes damage', (tester) async {

@@ -226,6 +226,27 @@ class ResourceHUD extends StatelessWidget {
               () => resourceVM.startGeneration(ResourceType.yellow),
               enabled: true,
             ),
+            // Resource upgrade buttons (US4)
+            _buildUpgradeButton(
+              'Upgrade Blue Generation (${resourceVM.getUpgradeCost(ResourceType.blue)} Yellow)',
+              Icons.upgrade,
+              Colors.blue,
+              () => resourceVM.upgradeResourceGeneration(ResourceType.blue),
+              enabled: resourceVM.canAfford(
+                ResourceType.yellow,
+                resourceVM.getUpgradeCost(ResourceType.blue),
+              ),
+            ),
+            _buildUpgradeButton(
+              'Upgrade Green Generation (${resourceVM.getUpgradeCost(ResourceType.green)} Yellow)',
+              Icons.upgrade,
+              Colors.green,
+              () => resourceVM.upgradeResourceGeneration(ResourceType.green),
+              enabled: resourceVM.canAfford(
+                ResourceType.yellow,
+                resourceVM.getUpgradeCost(ResourceType.green),
+              ),
+            ),
             // Wall upgrade button
             _buildActionButton(
               'Upgrade (50 Blue)',
@@ -281,6 +302,25 @@ class ResourceHUD extends StatelessWidget {
         backgroundColor: Colors.purple,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      ),
+    );
+  }
+
+  Widget _buildUpgradeButton(
+    String label,
+    IconData icon,
+    Color color,
+    VoidCallback onPressed, {
+    required bool enabled,
+  }) {
+    return ElevatedButton.icon(
+      onPressed: enabled ? onPressed : null,
+      icon: Icon(icon, size: 18),
+      label: Text(label, style: const TextStyle(fontSize: 12)),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color.withAlpha((0.8 * 255).round()),
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       ),
     );
   }

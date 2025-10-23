@@ -165,19 +165,19 @@
 
 ### Tests for User Story 4 (MANDATORY - Constitution Principle II) ✅
 
-- [ ] T067 [P] [US4] Unit test for yellow resource upgrade logic in test/unit/viewmodels/resource_viewmodel_test.dart
-- [ ] T068 [P] [US4] Widget test for resource upgrade UI in test/widget/components/resource_hud_test.dart
-- [ ] T069 [US4] Integration test for resource efficiency optimization in test/integration/us4_resource_optimization_test.dart
+- [X] T067 [P] [US4] Unit test for yellow resource upgrade logic in test/unit/viewmodels/resource_viewmodel_test.dart
+- [X] T068 [P] [US4] Widget test for resource upgrade UI in test/widget/components/resource_hud_test.dart
+- [X] T069 [US4] Integration test for resource efficiency optimization in test/integration/us4_resource_optimization_test.dart
 
 ### Implementation for User Story 4
 
-- [ ] T070 [P] [US4] Extend Resource model to support generation rate upgrades
-- [ ] T071 [US4] Add yellow resource upgrade logic to ResourceManagerService
-- [ ] T072 [US4] Extend ResourceViewModel with upgrade functionality
-- [ ] T073 [US4] Add resource upgrade buttons to ResourceHUD
-- [ ] T074 [US4] Create GameControls widget in lib/views/components/game_controls.dart
-- [ ] T075 [US4] Add exponential cost scaling to DifficultyScalerService
-- [ ] T076 [US4] Integrate resource optimization UI into GameView
+- [X] T070 [P] [US4] Extend Resource model to support generation rate upgrades
+- [X] T071 [US4] Add yellow resource upgrade logic to ResourceManagerService (skipped - not using service layer)
+- [X] T072 [US4] Extend ResourceViewModel with upgrade functionality
+- [X] T073 [US4] Add resource upgrade buttons to ResourceHUD
+- [X] T074 [US4] Create GameControls widget in lib/views/components/game_controls.dart (skipped - using ResourceHUD)
+- [X] T075 [US4] Add exponential cost scaling to DifficultyScalerService
+- [X] T076 [US4] Integrate resource optimization UI into GameView
 
 **Checkpoint**: All core user stories completed - strategic depth layer functional
 

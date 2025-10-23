@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:tower_defense_game/viewmodels/base_viewmodel.dart';
 import 'package:tower_defense_game/models/resource.dart';
 import 'package:tower_defense_game/models/game_enums.dart';
@@ -85,6 +87,39 @@ final class ResourceViewModel extends BaseViewModel {
         notifyListeners();
       }
     }
+  }
+
+  /// Get upgrade level for a resource type (based on current generation rate)
+  /// Base rate is 1.0, each upgrade adds 0.5, so level = (rate - 1.0) / 0.5
+  int getUpgradeLevel(ResourceType type) {
+    final resource = _resources[type];
+    if (resource == null || resource.generationRate <= 1.0) return 0;
+    return ((resource.generationRate - 1.0) / 0.5).round();
+  }
+
+  /// Calculate upgrade cost with exponential scaling
+  /// Base cost: 50 yellow, multiplier: 1.5x per level
+  int getUpgradeCost(ResourceType type) {
+    final level = getUpgradeLevel(type);
+    return _calculateUpgradeCost(50, level, 1.5);
+  }
+
+  /// Upgrade resource generation (simplified method for UI)
+  Future<void> upgradeResourceGeneration(ResourceType targetType) async {
+    final cost = getUpgradeCost(targetType);
+    await upgradeGenerationRate(
+      targetType,
+      0.5, // Each upgrade adds 0.5/s
+      ResourceType.yellow, // Cost in yellow
+      cost,
+    );
+  }
+
+  /// Calculate exponential upgrade cost
+  /// Formula: baseCost * (multiplier ^ level)
+  int _calculateUpgradeCost(int baseCost, int level, double multiplier) {
+    if (level == 0) return baseCost;
+    return (baseCost * pow(multiplier, level)).round();
   }
 
   void _initializeResources() {
