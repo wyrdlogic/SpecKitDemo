@@ -9,6 +9,29 @@
     "chat.tools.terminal.autoApprove": {
         ".specify/scripts/bash/": true,
         ".specify/scripts/powershell/": true
+    },
+    "dart.flutterSdkPath": null,
+    "dart.projectSearchDepth": 5,
+    "dart.runPubGetOnPubspecChanges": "always",
+    "dart.openDevTools": "flutter",
+    "dart.debugExternalPackageLibraries": false,
+    "dart.debugSdkLibraries": false,
+    "dart.evaluateGettersInDebugViews": true,
+    "dart.previewFlutterUiGuides": true,
+    "dart.previewFlutterUiGuidesCustomTracking": true,
+    "dart.hotReloadOnSave": "allIfDirty",
+    "files.associations": {
+        "*.dart": "dart"
+    },
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.rulers": [80],
+        "editor.selectionHighlight": false,
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        "editor.suggestSelection": "first",
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": "off"
     }
 }
 

@@ -22,7 +22,7 @@
 
 **Purpose**: Project initialization and Flutter/Flame structure
 
-- [ ] T001 Create Flutter web project structure per implementation plan
+- [x] T001 Create Flutter web project structure per implementation plan
 - [ ] T002 [P] Add Flame game engine dependency to pubspec.yaml
 - [ ] T003 [P] Configure web platform settings in web/index.html
 - [ ] T004 [P] Setup dependency injection container in lib/core/dependency_injection.dart
